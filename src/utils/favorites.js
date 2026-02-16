@@ -1,5 +1,8 @@
 export const getFavorites = () => {
-  return JSON.parse(localStorage.getItem("favorites")) || [];
+  const stored = localStorage.getItem("favorites");
+  const favorites = stored ? JSON.parse(stored) : [];
+  // Ensure all IDs are numbers
+  return favorites.map(id => Number(id));
 };
 
 export const saveFavorites = (favorites) => {
@@ -7,14 +10,15 @@ export const saveFavorites = (favorites) => {
 };
 
 export const toggleFavorite = (id) => {
+  const numericId = Number(id);
   const favorites = getFavorites();
 
-  if (favorites.includes(id)) {
-    const updated = favorites.filter((favId) => favId !== id);
+  if (favorites.includes(numericId)) {
+    const updated = favorites.filter((favId) => favId !== numericId);
     saveFavorites(updated);
     return updated;
   } else {
-    const updated = [...favorites, id];
+    const updated = [...favorites, numericId];
     saveFavorites(updated);
     return updated;
   }
